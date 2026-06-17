@@ -16,6 +16,7 @@ import { Button } from 'src/ui/button';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import { Text } from 'src/ui/text';
 
 import styles from './ArticleParamsForm.module.scss';
 
@@ -28,14 +29,14 @@ export const ArticleParamsForm = ({
 	articleState,
 	setArticleState,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isArticleFormOpen, setIsArticleFormOpen] = useState(false);
 
 	const [formState, setFormState] = useState<ArticleStateType>(articleState);
 
 	const asideRef = useRef<HTMLElement>(null);
 
 	useEffect(() => {
-		if (!isOpen) {
+		if (!isArticleFormOpen) {
 			return;
 		}
 
@@ -44,7 +45,7 @@ export const ArticleParamsForm = ({
 				asideRef.current &&
 				!asideRef.current.contains(event.target as Node)
 			) {
-				setIsOpen(false);
+				setIsArticleFormOpen(false);
 			}
 		};
 
@@ -53,7 +54,7 @@ export const ArticleParamsForm = ({
 		return () => {
 			document.removeEventListener('mousedown', handleOutsideClick);
 		};
-	}, [isOpen]);
+	}, [isArticleFormOpen]);
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -67,14 +68,21 @@ export const ArticleParamsForm = ({
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
+			<ArrowButton
+				isOpen={isArticleFormOpen}
+				onClick={() => setIsArticleFormOpen((prev) => !prev)}
+			/>
 
 			<aside
 				ref={asideRef}
 				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
+					[styles.container_open]: isArticleFormOpen,
 				})}>
 				<form className={styles.form} onSubmit={handleSubmit}>
+					<Text as='h1' size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
+
 					<Select
 						title='Шрифт'
 						selected={formState.fontFamilyOption}
